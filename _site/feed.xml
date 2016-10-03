@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>surminus stuff</title>
+    <description>some stuff by laura martin</description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 11 Sep 2016 13:24:35 +0100</pubDate>
+    <lastBuildDate>Sun, 11 Sep 2016 13:24:35 +0100</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Updating this blog in Google Container Engine</title>
+        <description>&lt;h2 id=&quot;boil-the-kettle-and-make-a-cup-of-tea&quot;&gt;Boil the kettle and make a cup of tea&lt;/h2&gt;
+
+&lt;p&gt;One thing that really fascinates me in new tech is &lt;a href=&quot;http://kubernetes.io/&quot;&gt;Kubernetes&lt;/a&gt;.
+Unfortunately it seems unlikely that we’ll be using in my current role anytime soon,
+so I decided to simultaneously have a play and add some content at the same time; and
+when I say have a play, I mean use &lt;a href=&quot;https://cloud.google.com/container-engine/&quot;&gt;Google Container Engine&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;My problem is I always try to do too much and get overwhelmed, but this time
+I made myself keep it simple.&lt;/p&gt;
+
+&lt;p&gt;I really like the Google &lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud&lt;/code&gt; toolkit: it’s straight forward and documentation
+is excellent. This site was originally running on a VM in &lt;a href=&quot;https://cloud.google.com/compute/&quot;&gt;Google Compute&lt;/a&gt;,
+and the experience for bringing up a basic VM was as it should be: quick auth, a couple of commands,
+and an easy way to get data back for interaction. Super.&lt;/p&gt;
+
+&lt;p&gt;The first thing to do was create an image of the site using Docker. Since I’m
+using &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;, this was trivial. I &lt;a href=&quot;https://github.com/surminus/blog/blob/master/Dockerfile&quot;&gt;created a &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;&lt;/a&gt;,
+with &lt;code class=&quot;highlighter-rouge&quot;&gt;startup.sh&lt;/code&gt; containing &lt;a href=&quot;https://github.com/surminus/blog/blob/master/startup.sh&quot;&gt;some binding info&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I built the image with the tag &lt;a href=&quot;https://cloud.google.com/container-registry/docs/pushing&quot;&gt;documented by Google Container Registry&lt;/a&gt;. For the purposes
+here I’ll just refer to it as &lt;code class=&quot;highlighter-rouge&quot;&gt;$TAG&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;docker build -t &lt;span class=&quot;nv&quot;&gt;$TAG&lt;/span&gt; .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Run it to make sure it’s OK…&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;docker run &lt;span class=&quot;nv&quot;&gt;$TAG&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;…and push it to the registry:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gcloud docker push &lt;span class=&quot;nv&quot;&gt;$TAG&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Next we need to make a cluster to run our &lt;a href=&quot;http://kubernetes.io/docs/user-guide/pods/&quot;&gt;“pods”&lt;/a&gt;:
+&lt;a href=&quot;https://cloud.google.com/sdk/gcloud/reference/container/clusters/create&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud container clusters create blog&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This can take a little while, probably just enough time to drink the tea you made right at the beginning. When that’s done,
+and you feel sufficiently warmed by the tea, it’s time to push our image into the cluster:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;kubectl run blog --image&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TAG&lt;/span&gt; --port&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4000&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Before we get to see the service, we need to expose it a load balancer:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;kubectl expose deployment blog --port&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;80 --target-port&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4000 --type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;LoadBalancer&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Note the port forwarding; it’s running on tcp/4000 in the container, so we need to tell
+the load balancer to forward traffic to it appropriately.&lt;/p&gt;
+
+&lt;p&gt;Grab the external IP of the deployment using:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;➜  blog git:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;master&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ✗ kubectl get service blog
+NAME      CLUSTER-IP     EXTERNAL-IP      PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   AGE
+blog      10.3.252.135   23.251.133.125   80/TCP    1m&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;It’ll probably be in &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;pending&amp;gt;&lt;/code&gt; for perhaps a minute or two.&lt;/p&gt;
+
+&lt;p&gt;You can see some fuller information of this deployment:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;➜  blog git:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;master&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ✗ kubectl describe service blog
+Name:                   blog
+Namespace:              default
+Labels:                 &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;blog
+Selector:               &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;blog
+Type:                   LoadBalancer
+IP:                     10.3.252.135
+LoadBalancer Ingress:   23.251.133.125
+Port:                   &amp;lt;&lt;span class=&quot;nb&quot;&gt;unset&lt;/span&gt;&amp;gt; 80/TCP
+NodePort:               &amp;lt;&lt;span class=&quot;nb&quot;&gt;unset&lt;/span&gt;&amp;gt; 32368/TCP
+Endpoints:              10.0.0.4:4000
+Session Affinity:       None
+Events:
+  FirstSeen     LastSeen        Count   From                    SubobjectPath   Type            Reason                  Message
+  ---------     --------        -----   ----                    -------------   --------        ------                  -------
+  45m           45m             1       &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;service-controller &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;                   Normal          CreatingLoadBalancer    Creating load balancer
+  44m           44m             1       &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;service-controller &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;                   Normal          CreatedLoadBalancer     Created load balancer&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;updating-my-dns&quot;&gt;Updating my DNS&lt;/h2&gt;
+
+&lt;p&gt;So now I have something running in Google Container Engine, and it was all pretty
+straight forward. Unfortunately I still need to update the DNS, but fortunately
+that’s also hosted at Google.&lt;/p&gt;
+
+&lt;p&gt;Let’s find out the current state:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gcloud dns record-sets list -z &lt;span class=&quot;nv&quot;&gt;$ZONENAME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;To add/edit/remove a record, you must start a transaction:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gcloud dns record-sets transaction start -z &lt;span class=&quot;nv&quot;&gt;$ZONENAME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I already had a record set up for this, so I had to remove it, which is exactly the
+same command as below, except replacing &lt;code class=&quot;highlighter-rouge&quot;&gt;remove&lt;/code&gt; for &lt;code class=&quot;highlighter-rouge&quot;&gt;add&lt;/code&gt;. The following adds my new
+record;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gcloud dns record-sets transaction add 23.251.133.125 --name blog.surminus.co.uk. --ttl 300 --type A -z &lt;span class=&quot;nv&quot;&gt;$ZONENAME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then execute the change, and view the changes:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gcloud dns record-sets transaction execute -z &lt;span class=&quot;nv&quot;&gt;$ZONENAME&lt;/span&gt;
+gcloud dns record-sets list -z &lt;span class=&quot;nv&quot;&gt;$ZONENAME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;I know setting the TTL makes me a rebel without a cause. Suck it up.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;thats-it&quot;&gt;That’s it!&lt;/h2&gt;
+
+&lt;p&gt;That’s it!&lt;/p&gt;
+
+&lt;p&gt;If you’re reading this then it must have worked, and I actually have some content on my blog. Goodness.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 11 Sep 2016 00:00:00 +0100</pubDate>
+        <link>/updating-this-blog-in-google-container-engine/</link>
+        <guid isPermaLink="true">/updating-this-blog-in-google-container-engine/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Initial Commit</title>
+        <description>&lt;p&gt;I was bored so decided to create a site because I feel like I should have
+&lt;em&gt;something&lt;/em&gt; online.&lt;/p&gt;
+
+&lt;p&gt;That is all.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 16 Jun 2016 00:00:00 +0100</pubDate>
+        <link>/initial-commit/</link>
+        <guid isPermaLink="true">/initial-commit/</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
