@@ -131,4 +131,8 @@ That's it!
 
 If you're reading this then it must have worked, and I actually have some content on my blog. Goodness.
 
+## Update:
 
+Note that the guide above creates a default 3 node Kubernetes cluster in the Google Compute,
+which costs a bit of money. I now actually host using Github pages. The LoadBalancing also costs,
+and it's probably more effective to just have an nginx instance running somewhere.
