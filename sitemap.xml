@@ -3,28 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://surminus.github.io/post/foo/</loc>
+    <loc>/post/foo/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://surminus.github.io/categories/</loc>
+    <loc>/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://surminus.github.io/post/</loc>
+    <loc>/post/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://surminus.github.io/tags/</loc>
+    <loc>/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://surminus.github.io/</loc>
+    <loc>/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
     <priority>0</priority>
   </url>
