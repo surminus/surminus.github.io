@@ -3,28 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://blog.surminus.co.uk/post/foo/</loc>
+    <loc>https://surminus.github.io/post/foo/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.surminus.co.uk/categories/</loc>
+    <loc>https://surminus.github.io/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.surminus.co.uk/post/</loc>
+    <loc>https://surminus.github.io/post/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.surminus.co.uk/tags/</loc>
+    <loc>https://surminus.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.surminus.co.uk/</loc>
+    <loc>https://surminus.github.io/</loc>
     <lastmod>2018-02-20T08:10:27+00:00</lastmod>
     <priority>0</priority>
   </url>

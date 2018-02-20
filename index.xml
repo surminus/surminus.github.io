@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>surminus</title>
-    <link>http://blog.surminus.co.uk/</link>
+    <link>https://surminus.github.io/</link>
     <description>Recent content on surminus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 20 Feb 2018 08:10:27 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.surminus.co.uk/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://surminus.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>foo</title>
-      <link>http://blog.surminus.co.uk/post/foo/</link>
+      <link>https://surminus.github.io/post/foo/</link>
       <pubDate>Tue, 20 Feb 2018 08:10:27 +0000</pubDate>
       
-      <guid>http://blog.surminus.co.uk/post/foo/</guid>
+      <guid>https://surminus.github.io/post/foo/</guid>
       <description>A place to blog.
 Using Hugo and code-editor.
 A code block:
