@@ -18,6 +18,24 @@
   </url>
   
   <url>
+    <loc>https://surminus.github.io/tags/ci/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/cli/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/lint/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/</loc>
     <lastmod>2018-03-02T17:15:11+00:00</lastmod>
     <priority>0</priority>
@@ -25,6 +43,25 @@
   
   <url>
     <loc>https://surminus.github.io/tags/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/terraform/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/tooling/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/categories/tools/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
     <priority>0</priority>
   </url>
   
