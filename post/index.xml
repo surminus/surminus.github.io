@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Code released under the Apache 2.0 license.</copyright>
-    <lastBuildDate>Sat, 24 Feb 2018 14:13:37 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Mar 2018 17:15:11 +0000</lastBuildDate>
     
 	<atom:link href="https://surminus.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>My Favourite Tools</title>
+      <link>https://surminus.github.io/post/my-favourite-tools/</link>
+      <pubDate>Fri, 02 Mar 2018 17:15:11 +0000</pubDate>
+      
+      <guid>https://surminus.github.io/post/my-favourite-tools/</guid>
+      <description>The market is flooded with great tooling, so I wanted to list a few of my favourites that I&amp;rsquo;ve used in the past.
+Vale Vale is a linting tool for documentation. Stick it in CI pipeline to check for markdown (or whatever flavour documentation you use), tweak your requirements with styles, and set it to fail on poor grammar.
+asciinema asciinema live records your terminal session and then uploads somewhere providing you with a link to share.</description>
+    </item>
     
     <item>
       <title>Using Hugo for My Blog</title>

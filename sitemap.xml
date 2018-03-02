@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://surminus.github.io/post/my-favourite-tools/</loc>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/using-hugo-for-my-blog/</loc>
     <lastmod>2018-02-24T14:13:37+00:00</lastmod>
   </url>
@@ -14,7 +19,7 @@
   
   <url>
     <loc>https://surminus.github.io/post/</loc>
-    <lastmod>2018-02-24T14:13:37+00:00</lastmod>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -25,7 +30,7 @@
   
   <url>
     <loc>https://surminus.github.io/</loc>
-    <lastmod>2018-02-24T14:13:37+00:00</lastmod>
+    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
     <priority>0</priority>
   </url>
   
