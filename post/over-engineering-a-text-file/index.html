@@ -2,7 +2,6 @@
 <html lang="en-us">
 
 <head>
-	<meta name="generator" content="Hugo 0.36.1" />
 
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115038298-1"></script>
@@ -21,11 +20,8 @@
     <meta name="keywords" content="">
 
 
-    <title>surminus -- surminus</title>
+    <title>Over Engineering a Text File -- surminus</title>
 
-    
-    <link href="https://surminus.github.io/index.xml" rel="alternate" type="application/rss+xml" title="surminus" />
-    <link href="https://surminus.github.io/index.xml" rel="feed" type="application/rss+xml" title="surminus" />
     
 
     
@@ -83,33 +79,17 @@
 
 
     
-    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>surminus</h1>
-             <hr class="small">
-             <span class="subheading">Blog</span>
-           </div>
-         </div>
-       </div>
-     </div>
-    </header>
-
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/over-engineering-a-text-file/">
-                      <h2 class="post-title">Over Engineering a Text File</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
+    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Over Engineering a Text File</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">
+                 
   A 2 minute read,
 
 Posted by <a href="#">Laura Martin</a> on March 10, 2018
@@ -119,62 +99,44 @@ In
 <br />
 Tags 
 
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/my-favourite-tools/">
-                      <h2 class="post-title">My Favourite Tools</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
-  A 2 minute read,
-
-Posted by <a href="#">Laura Martin</a> on March 2, 2018
-<br />
-In <a href="https://surminus.github.io/categories/tools">Tools</a>
-
-<br />
-Tags <a href="https://surminus.github.io/tags/lint">lint</a>, <a href="https://surminus.github.io/tags/ci">ci</a>, <a href="https://surminus.github.io/tags/terraform">terraform</a>, <a href="https://surminus.github.io/tags/cli">cli</a>, <a href="https://surminus.github.io/tags/tooling">tooling</a>
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/using-hugo-for-my-blog/">
-                      <h2 class="post-title">Using Hugo for My Blog</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
-  A 1 minute read,
-
-Posted by <a href="#">Laura Martin</a> on February 24, 2018
-<br />
-In 
-
-<br />
-Tags 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-          
-          <ul class="pager">
-            <li class="next">
-              <a href="https://surminus.github.io/post/">Older Posts &rarr;</a>
-            </li>
-          </ul>
+               </span>
+             </div>
+           </div>
         </div>
       </div>
-    </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <p>In the ultimate exercise of procrastination, last week I decided I would like to have a to-do list that I could
+edit via command line to help reduce context switching and I would like this list to be in Github so I could
+sync between home and work devices. I also thought friends or colleages could raise PRs if they wanted me to do something (a
+feature no-one has yet taken advantage of, fortunately).</p>
+
+<p>To begin, I <a href="https://github.com/surminus/to-do">created a repository in Github</a> with my <a href="https://github.com/surminus/to-do/blob/master/to-do.md">list in markdown</a>.</p>
+
+<p>Then I decided rather than do any of things on the list, I would write some Bash script to help me manage this text file.</p>
+
+<p>It started as some simple aliases, and then blossomed into having an archiving function (I want to have an archive of everything
+I&rsquo;ve &ldquo;achieved&rdquo;) and auto updates against Github (I don&rsquo;t want to have to remember to sync between devices).</p>
+
+<p>Traditionally I&rsquo;ve used <a href="https://www.google.com/keep/">Google Keep</a>, but I often forget to check it and am more inclined to get into a
+routine when using command line. Shame there <a href="https://stackoverflow.com/questions/19196238/is-there-a-google-keep-api">isn&rsquo;t an API for Keep</a> as far as I can find.</p>
+
+<p>I have been reminded that there are already a whole variety of tools out there to help you manage
+to-do lists. However, this would have been significantly less fun, and I probably would have had to do the things on my list.</p>
+
+<script src="https://asciinema.org/a/mjKRWIGj0VB1yO40yJDpg2yWq.js" id="asciicast-mjKRWIGj0VB1yO40yJDpg2yWq" async></script>
+
+                  
+
+                </div>
+            </div>
+        </div>
+    </article>
 
     <hr>
     
