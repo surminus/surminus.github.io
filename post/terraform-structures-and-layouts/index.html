@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115038298-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-115038298-1');
+    </script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Laura Martin">
+    <meta name="keywords" content="">
+
+
+    <title>Terraform Structures and Layouts -- surminus</title>
+
+    
+
+    
+    <link href="https://surminus.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="https://surminus.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://surminus.github.io">surminus</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="https://surminus.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://surminus.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Terraform Structures and Layouts</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">
+                 
+  A 8 minute read,
+
+Posted by <a href="#">Laura Martin</a> on April 2, 2018
+<br />
+In 
+
+<br />
+Tags <a href="https://surminus.github.io/tags/terraform">terraform</a>, <a href="https://surminus.github.io/tags/cli">cli</a>, <a href="https://surminus.github.io/tags/tooling">tooling</a>
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Having recently moved role, one of my first tasks is to try and combine a mixture of
+CloudFormation JSON and custom Ruby scripts using Fog into a single repository using
+<a href="https://www.terraform.io/">Terraform</a>.</p>
+
+<p>The biggest challenge to me was what structure the code should take.</p>
+
+<p>Hashicorp provide <a href="https://github.com/hashicorp/best-practices/tree/master/terraform">&ldquo;best practices&rdquo;</a>
+but these do not provide any conclusion on the structure.</p>
+
+<p>There is also <a href="https://github.com/gruntwork-io/terragrunt">Terragrunt</a>, which
+provides tooling around an opinionated structure (Everything-is-a-Module).</p>
+
+<p>What I detail below is a breakdown of an opinionated structure we devised when <a href="https://github.com/alphagov/govuk-aws/blob/master/doc/architecture/decisions/0010-terraform-directory-structure.md">I worked
+on GOV.UK</a>,
+and which I found myself drawn to after starting a fresh project.</p>
+
+<h2 id="one-statefile-to-rule-them-all">One statefile to rule them all</h2>
+
+<p>The first question to ask yourself is: should I use a single statefile, or split
+my infrastructure into multiple states?</p>
+
+<p>A single statefile can help simplify things greatly; all your variables and outputs
+will be defined in one place, and you can directly reference all your resources:</p>
+
+<p><code>vpc_id = &quot;${aws_vpc.my_vpc.id}&quot;</code></p>
+
+<p>In this structure, our project looks like this:</p>
+
+<pre><code>project
+├── dns.tf
+├── ec2.tf
+├── main.tf
+├── outputs.tf
+├── rds.tf
+├── sg.tf
+├── variables.tf
+└── vpc.tf
+</code></pre>
+
+<p>With some simplification of code comes some cost: what happens if there is a problem
+with a resource in your statefile? Terraform will quit, and anything after will not
+be applied. If there is a problem at the beginning of the chain of resources, for example
+with some VPC settings, then it will mean you are stuck deploying until you have
+resolved this issue.</p>
+
+<p>It&rsquo;s worth noting you can use the <code>-target</code> flag when deploying, but this is a bit like
+using <code>--skip-broken</code> on a package manager. When did that ever feel right?</p>
+
+<h2 id="multiple-states-many-deploys">Multiple states, many deploys</h2>
+
+<p>Enter multiple statefiles and data sources. By splitting your code into multiple
+statefiles, you are reducing the impact that a broken statefile will have on your
+infrastructure.</p>
+
+<p>Let&rsquo;s break up our code for the VPC, DNS, security groups, EC2 and RDS into separate
+statefiles. If our DNS code breaks, then it won&rsquo;t stop deploys of RDS, which seems
+sensible.</p>
+
+<p>Referencing other resources does add a little complexity. You need to add
+a <a href="https://www.terraform.io/docs/providers/terraform/d/remote_state.html">Terraform remote state</a>
+data source, and reference the resource using that data (ensuring you have set the <a href="https://www.terraform.io/docs/configuration/outputs.html">output</a> in the upstream code):</p>
+
+<p><code>vpc_id = &quot;${data.terraform_remote_state.my_vpc_project.my_vpc_id}&quot;</code></p>
+
+<p>This now means we have created a dependency tree. We must ensure the VPC code
+has been deployed before we can run any code that depends on it.</p>
+
+<p>It also means that to deploy our infrastructure, we need to run Terraform five times
+in the right order.</p>
+
+<p>We&rsquo;ve made our code less vulnerable to problems, but added complexity for deployment.</p>
+
+<p>This is even before we start to consider the versioning of the code that is deployed. We made a change
+to a core piece of the infrastructure that everything is dependent on, but have we
+deployed everything so it&rsquo;s up to date?</p>
+
+<p><a href="https://github.com/camptocamp/terraboard">Terraboard</a> could be a nice solution to this,
+though I have yet to deploy it in a real environment.</p>
+
+<p>Our project now looks like this:</p>
+
+<pre><code>project
+├── dns
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── variables.tf
+├── ec2
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── variables.tf
+├── rds
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── variables.tf
+├── sg
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── variables.tf
+└── vpc
+    ├── main.tf
+    ├── outputs.tf
+    └── variables.tf
+</code></pre>
+
+<h2 id="multiple-environments">Multiple environments</h2>
+
+<p>If you&rsquo;re working on a project of any size, you will probably be working with multiple
+environments (Production, Staging, Dev) which you want to keep roughly in sync.</p>
+
+<p>The pattern for achieving this is using data structures. In Terraform you can <a href="https://www.terraform.io/intro/getting-started/variables.html#from-a-file">specify
+variables using &ldquo;var files&rdquo;</a>.
+These are a good way to define a set of data in a readable format.</p>
+
+<p>We can create different variable data for different environments, and these can be split
+into specifically named files. We can also split our backend configuration to be
+environment specific, so we can reference different backends or keys.</p>
+
+<p><strong>Always use a <a href="https://www.terraform.io/docs/backends/index.html">backend</a> to store your state! In current versions of Terraform they are easy to configure, so there is no excuse to keep your statefile in Github.</strong></p>
+
+<p>We can reference the environment in an environment variable for deployment:</p>
+
+<pre><code>export ENVIRONMENT=staging
+terraform init -backend-config=$ENVIRONMENT.backend
+terraform apply -var-file=$ENVIRONMENT.tfvars
+</code></pre>
+
+<p>The amount of code is expanding:</p>
+
+<pre><code>project
+├── dns
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── production.backend
+│   ├── production.tfvars
+│   ├── staging.backend
+│   ├── staging.tfvars
+│   └── variables.tf
+├── ec2
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── production.backend
+│   ├── production.tfvars
+│   ├── staging.backend
+│   ├── staging.tfvars
+│   └── variables.tf
+...
+</code></pre>
+
+<h2 id="hierarchy-of-data">Hierarchy of data</h2>
+
+<p>There is a strong chance you have variables which are common across all environments.</p>
+
+<p>When referencing variable files in Terraform, the variables contained in the last
+referenced file will override any previously specified variables.</p>
+
+<p>For example, in <code>staging.tfvars</code> we have:</p>
+
+<pre><code>colour = &quot;red&quot;
+</code></pre>
+
+<p>In <code>common.tfvars</code>:</p>
+
+<pre><code>colour = &quot;yellow&quot;
+</code></pre>
+
+<p>When we deploy the code, we can reference the var files in a hierarchy:</p>
+
+<p><code>terraform apply -var-file=common.tfvars -var-file=staging.tfvars</code></p>
+
+<p>This ensures that the <code>staging</code> specific variable has the correct data for that environment. <code>&quot;${var.colour}&quot;</code> will return <code>red</code>.</p>
+
+<p>Having a common data file ensures that we can remove repeated data in the environment specific
+data file:</p>
+
+<pre><code>project
+├── dns
+│   ├── common.tfvars
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── production.backend
+│   ├── production.tfvars
+│   ├── staging.backend
+│   └── variables.tf
+├── ec2
+│   ├── common.tfvars
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── production.backend
+│   ├── staging.backend
+│   └── variables.tf
+</code></pre>
+
+<p>If we have enough environments, it may make sense to move the variables to a
+dedicated data directory. We could also implement common data that is
+the same everywhere, or environment specific data that is common across
+all manifests.</p>
+
+<p>To split out the data, we may structure it in this way:</p>
+
+<pre><code>project
+├── data
+│   ├── common.tfvars
+│   ├── dev.tfvars
+│   ├── dns
+│   │   ├── common.tfvars
+│   │   ├── dev.tfvars
+│   │   ├── production.tfvars
+│   │   └── staging.tfvars
+│   ├── ec2
+│   │   ├── common.tfvars
+│   │   ├── dev.tfvars
+│   │   ├── production.tfvars
+│   │   └── staging.tfvars
+│   ├── production.tfvars
+│   └── staging.tfvars
+└── manifests
+    ├── dns
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   ├── production.backend
+    │   ├── staging.backend
+    │   └── variables.tf
+    ├── ec2
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   ├── production.backend
+    │   ├── staging.backend
+    │   └── variables.tf
+...
+</code></pre>
+
+<p>Our deployment may now look something like this:</p>
+
+<pre><code>cd manifests/ec2
+terraform init -backend-config=staging.backend
+terraform apply \
+  -var-file=../../data/common.tfvars \
+  -var-file=../../data/staging.tfvars \
+  -var-file=../../data/ec2/common.tfvars \
+  -var-file=../../data/ec2/staging.tfvars
+</code></pre>
+
+<p>Suffice to say, it is at this point when wrappers are created to simplify deployment
+logic.</p>
+
+<p>I&rsquo;d love to see a hierarchy of data added as a native function within Terraform. Perhaps
+a data source that uses <a href="http://jerakia.io/">Jerakia</a>, or an extension on how variables
+are implemented.</p>
+
+<h2 id="variables-and-outputs">Variables and outputs</h2>
+
+<p>There seems to be a pattern in which variables and outputs are put into
+separate files. When using the structure defined above, I strongly advocate
+that this is not necessary. Instead, put everything in one place, and if your
+code is getting too unwieldy, package it up in a module.</p>
+
+<p>If a variable is specific to the code inside the manifest file, it makes sense
+to keep it in the same file. A similar rule should apply to outputs.</p>
+
+<p>I like reading manifests that look like this:</p>
+
+<pre><code>/*
+*
+* My Manifest
+*
+*/
+
+### Variables
+
+variable &quot;foo&quot; {
+  default = &quot;bar&quot;
+}
+
+### Resources
+
+resource &quot;some_resource&quot; &quot;foo&quot; {
+  name = &quot;${var.foo}&quot;
+  ...
+}
+
+### Outputs
+
+output &quot;my_output&quot; {
+  value = &quot;${some_resource.foo.name}&quot;
+}
+</code></pre>
+
+<p>If there are variables which are used across multiple files, then it makes sense
+to have <code>variables.tf</code> file, but I would argue it&rsquo;s often not necessary.</p>
+
+<pre><code>project
+├── data
+│   ├── common.tfvars
+│   ├── dev.tfvars
+│   ├── dns
+│   │   ├── common.tfvars
+│   │   ├── dev.tfvars
+│   │   ├── production.tfvars
+│   │   └── staging.tfvars
+│   ├── ec2
+│   │   ├── common.tfvars
+│   │   ├── dev.tfvars
+│   │   ├── production.tfvars
+│   │   └── staging.tfvars
+│   ├── production.tfvars
+│   └── staging.tfvars
+└── manifests
+    ├── dns
+    │   ├── main.tf
+    │   ├── production.backend
+    │   └── staging.backend
+    ├── ec2
+    │   ├── main.tf
+    │   ├── production.backend
+    │   └── staging.backend
+    ├── rds
+    │   ├── main.tf
+    │   ├── production.backend
+    │   └── staging.backend
+...
+</code></pre>
+
+<h2 id="summary">Summary</h2>
+
+<p>This structure helps ensure you do not repeat code and definitions of variables,
+and ensures you can work with multiple environments against a backdrop of multiple
+statefiles.</p>
+
+<p>It introduces some problems, such as what version of the code is deployed and
+dependency management.</p>
+
+<p>I would love to see a structure and layout that works with native Terraform. Terraform
+is used most often in automated pipelines, and I would like to see a style guide
+formed by the community that could aid in consistent pipelines across organisations.
+It&rsquo;s always worth noting that Terraform hasn&rsquo;t hit v1.0 yet, so plenty of time
+for these ideas to be formed.</p>
+
+<h2 id="vs-terragrunt">Vs Terragrunt</h2>
+
+<p>As mentioned at the beginning, <a href="https://github.com/gruntwork-io/terragrunt">Terragrunt</a> is
+a widely used wrapper that is dependent upon the defined Gruntworks structure,
+and also requires adding Terragrunt specific configuration.</p>
+
+<p>I looked at using this when I started my latest project - it handles things like
+dependencies, albeit you have to add configuration to specify the dependencies. I
+decided not to use it because if you&rsquo;re going down that path you have to really
+commit to Everything-as-a-Module philosophy.</p>
+
+<p>I would suggest modules should abstract away an atomic set of resources, but feel uneasy
+at structuring absolutely everything within the module structure. I prefer
+the flexibility on calling on a module when required, but plainly defining resources
+in your main manifest file.</p>
+
+                  
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    
+                    <li>
+                      <a href="https://twitter.com/surminus">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/surminus">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Code released under the Apache 2.0 license.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="https://surminus.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="https://surminus.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="https://surminus.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+
