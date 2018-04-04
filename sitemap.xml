@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://surminus.github.io/post/why-i-left-gds/</loc>
+    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/terraform-structures-and-layouts/</loc>
     <lastmod>2018-04-02T13:27:53+01:00</lastmod>
   </url>
@@ -47,7 +52,19 @@
   
   <url>
     <loc>https://surminus.github.io/post/</loc>
-    <lastmod>2018-04-02T13:27:53+01:00</lastmod>
+    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/serious/</loc>
+    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/shocking/</loc>
+    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -77,7 +94,7 @@
   
   <url>
     <loc>https://surminus.github.io/</loc>
-    <lastmod>2018-04-02T13:27:53+01:00</lastmod>
+    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
     <priority>0</priority>
   </url>
   
