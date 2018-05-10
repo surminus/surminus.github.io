@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115038298-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-115038298-1');
+    </script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Laura Martin">
+    <meta name="keywords" content="">
+
+
+    <title>Installing Private Gems During a Docker Build -- surminus</title>
+
+    
+
+    
+    <link href="https://surminus.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="https://surminus.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://surminus.github.io">surminus</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="https://surminus.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://surminus.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Installing Private Gems During a Docker Build</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">
+                 
+  A 3 minute read,
+
+Posted by <a href="#">Laura Martin</a> on May 10, 2018
+<br />
+In 
+
+<br />
+Tags <a href="https://surminus.github.io/tags/docker">docker</a>, <a href="https://surminus.github.io/tags/ruby">ruby</a>
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>If you want to install <a href="https://rubygems.org/">RubyGems</a> using <a href="http://bundler.io/">Bundler</a>
+during a <a href="https://www.docker.com/">Docker</a> build, life becomes a little bit more complicated
+when some of these Gems are hosted in a private Github repository.</p>
+
+<p>The problem is that we do not want to expose any secret credentials in any of the
+container images that are built, and ideally we want to keep the build environment
+as simple as possible.</p>
+
+<p>So what can we try?</p>
+
+<h2 id="ssh-agent-forwarding">SSH agent forwarding</h2>
+
+<p>Plenty of people have described this method, and it is the thing that pops up
+most when searching for solutions. It involves mounting your host ssh agent
+against the container you&rsquo;re building:</p>
+
+<ul>
+<li><a href="https://dchua.com/2016/01/15/ssh-agent-forwarding-with-your-docker-container/">https://dchua.com/2016/01/15/ssh-agent-forwarding-with-your-docker-container/</a></li>
+<li><a href="https://blog.cloud66.com/pulling-git-into-a-docker-image-without-leaving-ssh-keys-behind/">https://blog.cloud66.com/pulling-git-into-a-docker-image-without-leaving-ssh-keys-behind/</a></li>
+</ul>
+
+<p>Unfortunately if you&rsquo;re using Docker for Mac, there is <a href="https://github.com/docker/for-mac/issues/410">an open issue</a>
+which means this solution turns into more of a hassle than you&rsquo;d like.</p>
+
+<h2 id="use-a-gem-server">Use a Gem server</h2>
+
+<p>It&rsquo;s <a href="http://guides.rubygems.org/run-your-own-gem-server/">pretty trivial to run your own Gem server</a>.</p>
+
+<p>One solution could be to fetch the Gems you need in your build environment,
+push them to your own Gem server, and then configure your Docker build to fetch
+from this server.</p>
+
+<p>I wasn&rsquo;t a fan of this solution because it involves a lot of scaffolding within a build environment, and there were also complications in potentially making the repository available to other people
+working on the code.</p>
+
+<h2 id="private-gem-repository">Private Gem repository</h2>
+
+<p>Host your private Gems in a private repository such as <a href="https://gemfury.com/">Gemfury</a>
+that allows you to pass in a token as an environment variable at build time.</p>
+
+<p>If you&rsquo;re already using a repository to host private Gems, I&rsquo;d suggest this
+solution. We weren&rsquo;t, and it felt like a lot of over engineering for what
+I was trying to solve.</p>
+
+<h2 id="bundle-package">Bundle package</h2>
+
+<p>I liked this solution, but it isn&rsquo;t the most efficient, and may also contribute to
+a larger image size.</p>
+
+<p>Run <code>bundle package --all</code> on the host to fetch the Gems. During the build,
+<code>COPY</code> them to the container as use <code>bundle install --local</code>.</p>
+
+<p>If you&rsquo;re building for a different platform, for example, building on MacOS
+for a Linux container, also use the <code>--all-platforms</code> flag.</p>
+
+<p>This increases operation time as you must fetch on the host and copy to the container
+rather than fetching directly.</p>
+
+<h2 id="use-a-github-personal-access-token">Use a Github personal access token</h2>
+
+<p>This is my preferred solution. You can pass in an environment variable
+without chaning <em>too</em> much in the build environment, but there are some
+considerations for the developers working in your repository.</p>
+
+<p>Create a <a href="https://github.com/settings/tokens">personal access token</a> your Github account (or the account you&rsquo;re
+using during build time). This can be passed in as the <code>BUNDLE_GITHUB__COM</code> environment
+variable and Bundler will <a href="http://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES">use this token to authenticate with Github</a>. The format of the value should be:</p>
+
+<p><code>BUNDLE_GITHUB__COM=abcd0123generatedtoken:x-oauth-basic</code></p>
+
+<p>In the Dockerfile, set this environment variable using <code>ARG</code>. Then pass it in
+using the <a href="https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables---build-arg"><code>--build-arg</code></a>
+flag. This ensures that the value will not be present anywhere within the image,
+which ensures we can fetch the Gems securely. For example:</p>
+
+<p><code>docker build -t myimage --build-arg BUNDLE_GITHUB__COM=mytoken:x-oauth-basic .</code></p>
+
+<p>It&rsquo;s worth noting you can just also just pass in an environment variable within that command:</p>
+
+<pre><code>export BUNDLE_GITHUB__COM==mytoken:x-oauth-basic
+docker build -t myimage --build-arg BUNDLE_GITHUB__COM .
+</code></pre>
+
+<p>This will require ensuring that your <code>Gemfile</code> is fetching Gems using <code>https</code>
+rather than an SSH key. For example, where you once had:</p>
+
+<p><code>'mygem', git: git@github.com:myrepo/mygem</code></p>
+
+<p>You would now have:</p>
+
+<p><code>'mygem', git: https://github.com/myrepo/mygem</code></p>
+
+<p>If you were changing this in your Gemfile, it would force any developers to set
+a token as well. This can be added globally by running:</p>
+
+<p><code>bundle config GITHUB__COM abcd0123generatedtoken:x-oauth-basic</code></p>
+
+                  
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    
+                    <li>
+                      <a href="https://twitter.com/surminus">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/surminus">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Code released under the Apache 2.0 license.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="https://surminus.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="https://surminus.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="https://surminus.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

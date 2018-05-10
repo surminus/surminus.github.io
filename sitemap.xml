@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://surminus.github.io/post/installing-private-gems-during-a-docker-build/</loc>
+    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/why-i-left-gds/</loc>
     <lastmod>2018-04-04T20:10:08+01:00</lastmod>
   </url>
@@ -45,6 +50,12 @@
   </url>
   
   <url>
+    <loc>https://surminus.github.io/tags/docker/</loc>
+    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/tags/lint/</loc>
     <lastmod>2018-03-02T17:15:11+00:00</lastmod>
     <priority>0</priority>
@@ -52,7 +63,13 @@
   
   <url>
     <loc>https://surminus.github.io/post/</loc>
-    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
+    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/ruby/</loc>
+    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -94,7 +111,7 @@
   
   <url>
     <loc>https://surminus.github.io/</loc>
-    <lastmod>2018-04-04T20:10:08+01:00</lastmod>
+    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
     <priority>0</priority>
   </url>
   

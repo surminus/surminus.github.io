@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Code released under the Apache 2.0 license.</copyright>
-    <lastBuildDate>Wed, 04 Apr 2018 20:10:08 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 10 May 2018 17:46:52 +0100</lastBuildDate>
     
 	<atom:link href="https://surminus.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Installing Private Gems During a Docker Build</title>
+      <link>https://surminus.github.io/post/installing-private-gems-during-a-docker-build/</link>
+      <pubDate>Thu, 10 May 2018 17:46:52 +0100</pubDate>
+      
+      <guid>https://surminus.github.io/post/installing-private-gems-during-a-docker-build/</guid>
+      <description>If you want to install RubyGems using Bundler during a Docker build, life becomes a little bit more complicated when some of these Gems are hosted in a private Github repository.
+The problem is that we do not want to expose any secret credentials in any of the container images that are built, and ideally we want to keep the build environment as simple as possible.
+So what can we try?</description>
+    </item>
     
     <item>
       <title>Why I Left GDS</title>
