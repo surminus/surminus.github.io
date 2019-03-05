@@ -2,7 +2,6 @@
 <html lang="en-us">
 
 <head>
-	<meta name="generator" content="Hugo 0.40.1" />
 
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115038298-1"></script>
@@ -21,11 +20,8 @@
     <meta name="keywords" content="">
 
 
-    <title>surminus -- surminus</title>
+    <title>Replicating a MySQL RDS Instance in Another VPC Within the Same Region -- surminus</title>
 
-    
-    <link href="https://surminus.github.io/index.xml" rel="alternate" type="application/rss+xml" title="surminus" />
-    <link href="https://surminus.github.io/index.xml" rel="feed" type="application/rss+xml" title="surminus" />
     
 
     
@@ -83,33 +79,17 @@
 
 
     
-    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>surminus</h1>
-             <hr class="small">
-             <span class="subheading">Blog</span>
-           </div>
-         </div>
-       </div>
-     </div>
-    </header>
-
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/replicating-an-rds-instance-in-another-vpc-within-the-same-region/">
-                      <h2 class="post-title">Replicating a MySQL RDS Instance in Another VPC Within the Same Region</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
+    <header class="intro-header" style="background-image: url('https://surminus.github.io/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Replicating a MySQL RDS Instance in Another VPC Within the Same Region</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">
+                 
   A 2 minute read,
 
 Posted by <a href="#">Laura Martin</a> on March 5, 2019
@@ -119,83 +99,114 @@ In
 <br />
 Tags <a href="https://surminus.github.io/tags/aws">aws</a>, <a href="https://surminus.github.io/tags/rds">rds</a>, <a href="https://surminus.github.io/tags/mysql">mysql</a>, <a href="https://surminus.github.io/tags/vpc">vpc</a>, <a href="https://surminus.github.io/tags/replica">replica</a>
 
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/installing-private-gems-during-a-docker-build/">
-                      <h2 class="post-title">Installing Private Gems During a Docker Build</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
-  A 3 minute read,
-
-Posted by <a href="#">Laura Martin</a> on May 10, 2018
-<br />
-In 
-
-<br />
-Tags <a href="https://surminus.github.io/tags/docker">docker</a>, <a href="https://surminus.github.io/tags/ruby">ruby</a>
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/why-i-left-gds/">
-                      <h2 class="post-title">Why I Left GDS</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
-  A 1 minute read,
-
-Posted by <a href="#">Laura Martin</a> on April 4, 2018
-<br />
-In 
-
-<br />
-Tags <a href="https://surminus.github.io/tags/serious">serious</a>, <a href="https://surminus.github.io/tags/shocking">shocking</a>
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="https://surminus.github.io/post/terraform-structures-and-layouts/">
-                      <h2 class="post-title">Terraform Structures and Layouts</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">
-                      
-  A 8 minute read,
-
-Posted by <a href="#">Laura Martin</a> on April 2, 2018
-<br />
-In 
-
-<br />
-Tags <a href="https://surminus.github.io/tags/terraform">terraform</a>, <a href="https://surminus.github.io/tags/cli">cli</a>, <a href="https://surminus.github.io/tags/tooling">tooling</a>
-
-                  </p>
-                </div>
-                <hr>
-
-          
-          
-          <ul class="pager">
-            <li class="next">
-              <a href="https://surminus.github.io/post/">Older Posts &rarr;</a>
-            </li>
-          </ul>
+               </span>
+             </div>
+           </div>
         </div>
       </div>
-    </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="challenge">Challenge</h2>
+
+<p>Within the same AWS region, I want to create a MySQL replica in a different
+VPC, where the source is the MySQL primary.</p>
+
+<p>I need this to happen without any interruption to the current MySQL primary
+instance.</p>
+
+<p>This assumes that both instances will be in private subnets.</p>
+
+<p>Whereas multi-region replicas are available out-of-the-box in RDS, creating
+replicas in different VPCs within the same region is not automated.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>MySQL replication works by copying binary logs from the MySQL primary instance,
+and running queries against the replica instance. To set up replication in an
+instance with a lot of data, we need to copy the data, and mark the position
+where this data ended to mark where we should begin replicating the latest
+data.</p>
+
+<p><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">Create a new read replica against the primary instance</a>. Read replicas
+can be created without downtime.</p>
+
+<p>Connect to the new read replica, and stop replication. We do not have the
+MySQL permissions to do this directly, but we can call an RDS specific
+stored procedure:</p>
+
+<pre><code>CALL mysql.rds_stop_replication;
+</code></pre>
+
+<p>Find the log coordinates at this point:</p>
+
+<pre><code>SHOW SLAVE STATUS \G
+</code></pre>
+
+<p>The lines we require are:</p>
+
+<pre><code>master_log_file
+master_log_pos
+</code></pre>
+
+<p>Make a copy of these values for safe keeping.</p>
+
+<p><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html">Create a snapshot of the new replica</a>.</p>
+
+<p><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_RestoreFromSnapshot.html">Provision a new instance from the snapshot into the VPC you wish to replicate
+to</a>.</p>
+
+<p>On the primary instance, connect to the MySQL console, and set up a user
+that will be used for replication:</p>
+
+<pre><code>GRANT REPLICATION CLIENT, REPLICATION SLAVE ON *.* TO
+'repl_user'@'mydomain.com' IDENTIFIED BY '&lt;password&gt;';
+</code></pre>
+
+<p>On the new replica instance in the new VPC, open up the MySQL console and set
+up MySQL replication using the details we fetched in a previous step.</p>
+
+<p>To find the primary instance address, ping the primary instance to discover
+the private IP.</p>
+
+<pre><code>CALL mysql.rds_set_external_master ('&lt;primary ip&gt;', 3306, 'repl_user',
+'&lt;password&gt;', '&lt;master_log_file value&gt;', &lt;master_log_pos value&gt;, 0);
+</code></pre>
+
+<p>Start replication:</p>
+
+<pre><code>CALL mysql.rds_start_replication;
+</code></pre>
+
+<p>View status with:</p>
+
+<pre><code>SHOW SLAVE STATUS \G
+</code></pre>
+
+<p>At this point, replication should be ready, but will not work if VPC peering
+has not yet been configured. Please see Amazon documentation on <a href="https://docs.aws.amazon.com/vpc/latest/peering/create-vpc-peering-connection.html">creating a
+VPC peer</a> and <a href="https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-routing.html">setting up route tables</a>.</p>
+
+<p>The read replica that we created to take the snapshot of can be deleted.</p>
+
+<p>If you need to create read replicas from the new instance, backups should be
+enabled (they are disabled by default).</p>
+
+<p>Security groups should also be set up to allow communication between the new
+replica and the primary instance.</p>
+
+                  
+
+                </div>
+            </div>
+        </div>
+    </article>
 
     <hr>
     

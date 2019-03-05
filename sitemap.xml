@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://surminus.github.io/post/replicating-an-rds-instance-in-another-vpc-within-the-same-region/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/installing-private-gems-during-a-docker-build/</loc>
     <lastmod>2018-05-10T17:46:52+01:00</lastmod>
   </url>
@@ -30,6 +35,12 @@
   <url>
     <loc>https://surminus.github.io/post/using-hugo-for-my-blog/</loc>
     <lastmod>2018-02-24T14:13:37+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/aws/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -62,8 +73,26 @@
   </url>
   
   <url>
+    <loc>https://surminus.github.io/tags/mysql/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/post/</loc>
-    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/rds/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://surminus.github.io/tags/replica/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -87,7 +116,7 @@
   
   <url>
     <loc>https://surminus.github.io/tags/</loc>
-    <lastmod>2018-03-02T17:15:11+00:00</lastmod>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -110,8 +139,14 @@
   </url>
   
   <url>
+    <loc>https://surminus.github.io/tags/vpc/</loc>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://surminus.github.io/</loc>
-    <lastmod>2018-05-10T17:46:52+01:00</lastmod>
+    <lastmod>2019-03-05T14:34:40+00:00</lastmod>
     <priority>0</priority>
   </url>
   

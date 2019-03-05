@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vpc on surminus</title>
+    <link>https://surminus.github.io/tags/vpc/</link>
+    <description>Recent content in Vpc on surminus</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Code released under the Apache 2.0 license.</copyright>
+    <lastBuildDate>Tue, 05 Mar 2019 14:34:40 +0000</lastBuildDate>
+    
+	<atom:link href="https://surminus.github.io/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Replicating a MySQL RDS Instance in Another VPC Within the Same Region</title>
+      <link>https://surminus.github.io/post/replicating-an-rds-instance-in-another-vpc-within-the-same-region/</link>
+      <pubDate>Tue, 05 Mar 2019 14:34:40 +0000</pubDate>
+      
+      <guid>https://surminus.github.io/post/replicating-an-rds-instance-in-another-vpc-within-the-same-region/</guid>
+      <description>Challenge Within the same AWS region, I want to create a MySQL replica in a different VPC, where the source is the MySQL primary.
+I need this to happen without any interruption to the current MySQL primary instance.
+This assumes that both instances will be in private subnets.
+Whereas multi-region replicas are available out-of-the-box in RDS, creating replicas in different VPCs within the same region is not automated.
+Solution MySQL replication works by copying binary logs from the MySQL primary instance, and running queries against the replica instance.</description>
+    </item>
+    
+  </channel>
+</rss>
